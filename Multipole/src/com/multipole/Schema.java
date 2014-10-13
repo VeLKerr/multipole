@@ -29,13 +29,15 @@ public class Schema {
     public static final int VAR_CNT = 3;
     private final MultiValueMap<Integer, Integer> ajacencyMap;
     private final Set<Vertex> vertices;
+    private final Set<Vertex> sortedVertices;
     
     public Schema(){
         this.ajacencyMap = new MultiValueMap<>();
-        this.vertices = new TreeSet<>(new VertexComparator());
+        this.vertices = new HashSet<>();
+        this.sortedVertices = new TreeSet<>(new VertexComparator());
     }
     
-    private Vertex[] add1VarMulipole(int cnt){
+    private Vertex[] gen1VarMulipole(int cnt){
         int initialSize = vertices.size();
         Vertex[] inputs = new Vertex[2];
         Vertex input = new Vertex(vertices.size(), VertexType.INPUT, InitialMasives.getInitialValues(cnt));
@@ -51,7 +53,7 @@ public class Schema {
     private List<Vertex[]> generate1stLayer(){
         List<Vertex[]> res = new ArrayList<>();
         for(int i=0; i<VAR_CNT; i++){
-            res.add(add1VarMulipole(i));
+            res.add(gen1VarMulipole(i));
         }
         return res;
     }
@@ -83,34 +85,24 @@ public class Schema {
         return outputs;
     }
     
-    public void generate3stLayer(){
+    public void generateSchema(){
         List<Vertex> inputs = generate2stLayer();
         List<Vertex> output = new ArrayList<>();
         for(int i=0; i<inputs.size(); i++){
             for(int j=i+1; j<inputs.size(); j++){
-                output.add(addBinaryElement(inputs.get(i), inputs.get(j), VertexType.OR));
-            }
-        }
-        for(int i=0; i<2; i++){
-            output = generateNextLayer(inputs, output);
-        }
-        
-        int k=0;
-        for(Vertex v1: vertices){
-            for(Vertex v2: vertices){
-                if(v1.getIndex() != v2.getIndex() &&
-                   Arrays.equals(v1.getValues(), v2.getValues())){
-                    //System.err.println("КАРАУЛ!");
-                    k++;
+                Vertex vert = addBinaryElement(inputs.get(i), inputs.get(j), VertexType.OR);
+                if(vert != null){
+                    output.add(vert);
                 }
             }
         }
-        System.err.println(k / 2);
-//        for(int i=0; i<ouptut2.size(); i++){
-//            for(int j=i+1; j<ouptut2.size(); j++){
-//                output4.add(addBinaryElement(i, j, VertexType.OR));
-//            }
-//        }
+        for(int i=0; i<7; i++){
+            output = generateNextLayer(inputs, output);
+        }
+        List<Vertex> additional = findBy(new int[]{0, 1});
+        addBinaryElement(additional.get(0), additional.get(1), VertexType.AND);
+        sortedVertices.addAll(vertices);
+        System.err.println(_check());
     }
     
     private List<Vertex> generateNextLayer(List<Vertex> inputs, List<Vertex> outpPrevious){ //могут быть повторения!
@@ -129,6 +121,20 @@ public class Schema {
         return res;
     }
     
+    private List<Vertex> findBy(int[] indexes){
+        List<Vertex> res = new ArrayList<>();
+        Iterator<Vertex> it = vertices.iterator();
+        while(it.hasNext()){
+            Vertex v = it.next();
+            for(int index: indexes){
+                if(v.getIndex() == index){
+                    res.add(v);
+                }
+            }
+        }
+        return res;
+    }
+    
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
@@ -137,11 +143,10 @@ public class Schema {
             Map.Entry<Integer, Integer> entry = it.next();
             sb.append(entry.getKey()).append(" ").append(entry.getValue()).append("\n");
         }
-        for(Vertex v: vertices){
+        for(Vertex v: sortedVertices){
             if(v.isElement()){
                 sb.append(v.getIndex()).append(" ");
-                sb.append(v.getType().toString()).append(v.valuesToString())
-                        .append("\n");
+                sb.append(v.getType().toString()).append("\n");
             }
         }
         return sb.toString();
@@ -156,24 +161,14 @@ public class Schema {
         osw.close();
     }
     
-    private List<Integer> getAll(VertexType vt){
-        List<Integer> res = new ArrayList<>();
-        for(Vertex v: vertices){
-            if(v.getType().equals(vt)){
-                res.add(v.getIndex());
-            }
-        }
-        return res;
-    }
-    
-    private Vertex findBy(int index){
-        Iterator<Vertex> it = vertices.iterator();
+    private boolean _check(){
+        boolean[] foolMas = {false, false, false, false, false, false, false, false};
+        Iterator<Vertex> it = sortedVertices.iterator();
         while(it.hasNext()){
-            Vertex vert = it.next();
-            if(vert.getIndex() == index){
-                return vert;
+            if(Arrays.equals(foolMas, it.next()._getValues())){
+                return true;
             }
         }
-        return null;
+        return false;
     }
 }

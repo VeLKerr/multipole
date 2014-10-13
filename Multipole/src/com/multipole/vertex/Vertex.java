@@ -9,20 +9,12 @@ import java.util.List;
  *
  * @author Ivchenko Oleg (Kirius VeLKerr)
  */
-public class Vertex {   
+public class Vertex{   
     private Vertex parent1;
     private Vertex parent2;
     private int index;
     private final VertexType type;
     private boolean[] values;
-
-    public Vertex(int index, VertexType type) {
-        this.index = index;
-        this.type = type;
-        this.parent1 = null;
-        this.parent2 = null;
-        initValues();
-    }
     
     public Vertex(int index, VertexType type, boolean[] values) {
         this.index = index;
@@ -46,10 +38,6 @@ public class Vertex {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.values = type.countValues(parent1.values, parent2.values);
-    }
-    
-    private void initValues(){
-        values = new boolean[(int)Math.pow(2, VAR_CNT)];
     }
     
     public int getIndex() {
@@ -85,19 +73,6 @@ public class Vertex {
         }
         final Vertex other = (Vertex) obj;
         return Arrays.equals(this.values, other.values);
-//        return arrEq(this.values, other.values);
-    }
-    
-    private static boolean arrEq(boolean[] arr1, boolean[] arr2){
-        if(arr1.length != arr2.length){
-            return false;
-        }
-        for(int i=0; i<arr1.length; i++){
-            if(arr1[i] != arr2[i]){
-                return false;
-            }
-        }
-        return true;
     }
     
     public List<Vertex> getParents(){
@@ -107,7 +82,7 @@ public class Vertex {
         return parents;
     }
     
-    public String valuesToString(){
+    public String _valuesToString(){
         StringBuilder sb = new StringBuilder(" ");
         for(boolean v: values){
             if(v){
@@ -121,7 +96,7 @@ public class Vertex {
         return sb.toString();
     }
 
-    public boolean[] getValues() {
+    public boolean[] _getValues() {
         return values;
     }
 }
