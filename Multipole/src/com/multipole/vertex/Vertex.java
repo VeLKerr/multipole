@@ -81,22 +81,4 @@ public class Vertex{
         parents.add(parent2);
         return parents;
     }
-    
-    public String _valuesToString(){
-        StringBuilder sb = new StringBuilder(" ");
-        for(boolean v: values){
-            if(v){
-                sb.append(1);
-            }
-            else{
-                sb.append(0);
-            }
-            sb.append(" ");
-        }
-        return sb.toString();
-    }
-
-    public boolean[] _getValues() {
-        return values;
-    }
 }
