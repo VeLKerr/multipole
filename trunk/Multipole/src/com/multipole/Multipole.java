@@ -7,25 +7,20 @@
 package com.multipole;
 
 import java.io.IOException;
-import static com.multipole.Schema.VAR_CNT;
-import java.util.Arrays;
 
 /**
  *
  * @author Ivchenko Oleg (Kirius VeLKerr)
  */
 public class Multipole {
-    public static final String filename = "out.txt";
+    public static final String filename = "input.txt";
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         Schema schema = new Schema();
-        schema.generate3stLayer();
-        System.out.println(schema.toString());
-        for(int i=0; i<VAR_CNT; i++){
-        System.out.println(Arrays.toString(InitialMasives.getInitialValues(i)));
-        }
+        schema.generateSchema();
+        schema.toTextFile(filename);
     }
 }
