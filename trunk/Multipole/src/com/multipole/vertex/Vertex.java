@@ -66,7 +66,13 @@ public class Vertex {
 
     @Override
     public int hashCode() {
-        return 97 * 3 + Arrays.hashCode(this.values);
+        int hash = 0;
+        for(int i=0; i<values.length; i++){
+            if(values[i]){
+                hash += Math.pow(10, i);
+            }
+        }
+        return hash;
     }
 
     @Override
@@ -79,6 +85,19 @@ public class Vertex {
         }
         final Vertex other = (Vertex) obj;
         return Arrays.equals(this.values, other.values);
+//        return arrEq(this.values, other.values);
+    }
+    
+    private static boolean arrEq(boolean[] arr1, boolean[] arr2){
+        if(arr1.length != arr2.length){
+            return false;
+        }
+        for(int i=0; i<arr1.length; i++){
+            if(arr1[i] != arr2[i]){
+                return false;
+            }
+        }
+        return true;
     }
     
     public List<Vertex> getParents(){
@@ -100,5 +119,9 @@ public class Vertex {
             sb.append(" ");
         }
         return sb.toString();
+    }
+
+    public boolean[] getValues() {
+        return values;
     }
 }

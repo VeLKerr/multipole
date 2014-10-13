@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -90,9 +91,21 @@ public class Schema {
                 output.add(addBinaryElement(inputs.get(i), inputs.get(j), VertexType.OR));
             }
         }
-        for(int i=0; i<1; i++){
+        for(int i=0; i<2; i++){
             output = generateNextLayer(inputs, output);
-        }        
+        }
+        
+        int k=0;
+        for(Vertex v1: vertices){
+            for(Vertex v2: vertices){
+                if(v1.getIndex() != v2.getIndex() &&
+                   Arrays.equals(v1.getValues(), v2.getValues())){
+                    //System.err.println("КАРАУЛ!");
+                    k++;
+                }
+            }
+        }
+        System.err.println(k / 2);
 //        for(int i=0; i<ouptut2.size(); i++){
 //            for(int j=i+1; j<ouptut2.size(); j++){
 //                output4.add(addBinaryElement(i, j, VertexType.OR));
