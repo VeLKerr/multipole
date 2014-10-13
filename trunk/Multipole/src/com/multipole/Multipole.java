@@ -7,6 +7,8 @@
 package com.multipole;
 
 import java.io.IOException;
+import static com.multipole.Schema.VAR_CNT;
+import java.util.Arrays;
 
 /**
  *
@@ -14,16 +16,16 @@ import java.io.IOException;
  */
 public class Multipole {
     public static final String filename = "out.txt";
-    public static final int varCnt = 3;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         Schema schema = new Schema();
-        schema.generate2stLayer();
+        schema.generate3stLayer();
         System.out.println(schema.toString());
-//        SchemaTextView.test();
+        for(int i=0; i<VAR_CNT; i++){
+        System.out.println(Arrays.toString(InitialMasives.getInitialValues(i)));
+        }
     }
-    
 }
