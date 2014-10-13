@@ -102,7 +102,6 @@ public class Schema {
         List<Vertex> additional = findBy(new int[]{0, 1});
         addBinaryElement(additional.get(0), additional.get(1), VertexType.AND);
         sortedVertices.addAll(vertices);
-        System.err.println(_check());
     }
     
     private List<Vertex> generateNextLayer(List<Vertex> inputs, List<Vertex> outpPrevious){ //могут быть повторения!
@@ -159,16 +158,5 @@ public class Schema {
         osw.write(toString());
         osw.flush();
         osw.close();
-    }
-    
-    private boolean _check(){
-        boolean[] foolMas = {false, false, false, false, false, false, false, false};
-        Iterator<Vertex> it = sortedVertices.iterator();
-        while(it.hasNext()){
-            if(Arrays.equals(foolMas, it.next()._getValues())){
-                return true;
-            }
-        }
-        return false;
     }
 }
