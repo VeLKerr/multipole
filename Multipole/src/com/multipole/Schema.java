@@ -37,6 +37,29 @@ public class Schema {
         this.sortedVertices = new TreeSet<>(new VertexComparator());
     }
     
+    private Vertex[] genInputs(){
+        Vertex[] res = new Vertex[VAR_CNT];
+        for(int i=0; i<res.length; i++){
+            res[i] = new Vertex(i, VertexType.INPUT, InitialMasives.getInitialValues(i));
+            vertices.add(res[i]);
+        }
+        return res;
+    }
+    
+    private List<Vertex[]> gen1stLayer(){
+        Vertex[] inputs = genInputs();
+        List<Vertex[]> res = new ArrayList<>();
+        for(int i=0; i<inputs.length; i++){
+            Vertex[] verts = new Vertex[2];
+            verts[0] = inputs[i];
+            verts[1] = new Vertex(vertices.size(), VertexType.NOT, verts[0]);
+            ajacencyMap.put(verts[0].getIndex(), verts[1].getIndex());
+            res.add(verts);
+            vertices.add(verts[1]);
+        }
+        return res;
+    }
+    
     private Vertex[] gen1VarMulipole(int cnt){
         int initialSize = vertices.size();
         Vertex[] inputs = new Vertex[2];
@@ -69,7 +92,8 @@ public class Schema {
     }
     
     private List<Vertex> generate2stLayer(){
-        List<Vertex[]> inputs = generate1stLayer();
+//        List<Vertex[]> inputs = generate1stLayer(); // {0, 1}
+        List<Vertex[]> inputs = gen1stLayer();
         List<Vertex> subOutputs = new ArrayList<>();
         List<Vertex> outputs = new ArrayList<>();
         for(int i=0; i<2; i++){ //добавляем 1-й ряд конъюнкций
@@ -99,7 +123,7 @@ public class Schema {
         for(int i=0; i<7; i++){
             output = generateNextLayer(inputs, output);
         }
-        List<Vertex> additional = findBy(new int[]{0, 1});
+        List<Vertex> additional = findBy(new int[]{0, 3});
         addBinaryElement(additional.get(0), additional.get(1), VertexType.AND);
         sortedVertices.addAll(vertices);
     }
