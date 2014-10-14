@@ -1,7 +1,6 @@
 
 package com.multipole.vertex;
 
-import static com.multipole.Schema.VAR_CNT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

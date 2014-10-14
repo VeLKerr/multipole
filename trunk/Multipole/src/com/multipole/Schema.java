@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.commons.collections4.map.MultiValueMap;
@@ -46,7 +45,7 @@ public class Schema {
         return res;
     }
     
-    private List<Vertex[]> gen1stLayer(){
+    private List<Vertex[]> generate1stLayer(){
         Vertex[] inputs = genInputs();
         List<Vertex[]> res = new ArrayList<>();
         for(int i=0; i<inputs.length; i++){
@@ -56,27 +55,6 @@ public class Schema {
             ajacencyMap.put(verts[0].getIndex(), verts[1].getIndex());
             res.add(verts);
             vertices.add(verts[1]);
-        }
-        return res;
-    }
-    
-    private Vertex[] gen1VarMulipole(int cnt){
-        int initialSize = vertices.size();
-        Vertex[] inputs = new Vertex[2];
-        Vertex input = new Vertex(vertices.size(), VertexType.INPUT, InitialMasives.getInitialValues(cnt));
-        inputs[0] = input;
-        vertices.add(input);
-        Vertex not = new Vertex(vertices.size(), VertexType.NOT, input);
-        inputs[1] = not;
-        vertices.add(not);
-        ajacencyMap.put(initialSize, initialSize + 1);
-        return inputs;
-    }
-    
-    private List<Vertex[]> generate1stLayer(){
-        List<Vertex[]> res = new ArrayList<>();
-        for(int i=0; i<VAR_CNT; i++){
-            res.add(gen1VarMulipole(i));
         }
         return res;
     }
@@ -92,8 +70,7 @@ public class Schema {
     }
     
     private List<Vertex> generate2stLayer(){
-//        List<Vertex[]> inputs = generate1stLayer(); // 124 -> {0, 1}
-        List<Vertex[]> inputs = gen1stLayer(); //124 -> {0, 3}
+        List<Vertex[]> inputs = generate1stLayer();
         List<Vertex> subOutputs = new ArrayList<>();
         List<Vertex> outputs = new ArrayList<>();
         for(int i=0; i<2; i++){ //добавляем 1-й ряд конъюнкций
