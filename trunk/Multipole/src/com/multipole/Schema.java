@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.commons.collections4.map.MultiValueMap;
@@ -84,16 +84,16 @@ public class Schema {
     private Vertex addBinaryElement(Vertex vertex1, Vertex vertex2, VertexType vt){  
         Vertex newVertex = new Vertex(vertices.size(), vt, vertex1, vertex2);
         if(vertices.add(newVertex)){
-            ajacencyMap.put(vertex1.getIndex(), vertices.size());
-            ajacencyMap.put(vertex2.getIndex(), vertices.size());
+            ajacencyMap.put(vertex1.getIndex(), vertices.size() - 1);
+            ajacencyMap.put(vertex2.getIndex(), vertices.size() - 1);
             return newVertex;
         }
         return null;
     }
     
     private List<Vertex> generate2stLayer(){
-//        List<Vertex[]> inputs = generate1stLayer(); // {0, 1}
-        List<Vertex[]> inputs = gen1stLayer();
+//        List<Vertex[]> inputs = generate1stLayer(); // 124 -> {0, 1}
+        List<Vertex[]> inputs = gen1stLayer(); //124 -> {0, 3}
         List<Vertex> subOutputs = new ArrayList<>();
         List<Vertex> outputs = new ArrayList<>();
         for(int i=0; i<2; i++){ //добавляем 1-й ряд конъюнкций
