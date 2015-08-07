@@ -1,0 +1,1 @@
+Optimization of the 3-multipole functional scheme
